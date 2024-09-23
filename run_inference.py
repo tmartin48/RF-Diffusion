@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Inference script.
 
@@ -179,7 +180,8 @@ def save_outputs(sampler, out_prefix, indep, denoised_xyz_stack, px0_xyz_stack, 
     # Save outputs
     out_head, out_tail = os.path.split(out_prefix)
     unidealized_dir = os.path.join(out_head, 'unidealized')
-    os.makedirs(out_head, exist_ok=True)
+    if len(out_head) > 0:
+        os.makedirs(out_head, exist_ok=True)
     os.makedirs(unidealized_dir, exist_ok=True)
 
     # pX0 last step
@@ -195,7 +197,10 @@ def save_outputs(sampler, out_prefix, indep, denoised_xyz_stack, px0_xyz_stack, 
     des_path = os.path.abspath(out_idealized)
 
     # trajectory pdbs
-    traj_prefix = os.path.dirname(out_prefix)+'/traj/'+os.path.basename(out_prefix)
+    out_prefix_dirname = os.path.dirname(out_prefix)
+    if len(out_prefix_dirname) == 0:
+        out_prefix_dirname = '.'
+    traj_prefix = out_prefix_dirname+'/traj/'+os.path.basename(out_prefix)
     os.makedirs(os.path.dirname(traj_prefix), exist_ok=True)
 
     out = f'{traj_prefix}_Xt-1_traj.pdb'
