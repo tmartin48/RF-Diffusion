@@ -21,6 +21,7 @@ import util
 from hydra.core.hydra_config import HydraConfig
 from rf2aa.model import RoseTTAFoldModel
 
+import os
 import sys
 sys.path.append('../') # to access RF structure prediction stuff 
 
@@ -53,6 +54,11 @@ class Sampler:
 
         # Initialize inference only helper objects to Sampler
         self.ckpt_path = conf.inference.ckpt_path
+        if not os.path.exists( self.ckpt_path ):
+            # Look for it in directory above this file
+            alt_path = os.path.join( os.path.dirname(os.path.dirname(os.path.abspath(__file__))), self.ckpt_path )
+            if os.path.exists( alt_path ):
+                self.ckpt_path = alt_path
 
         if needs_model_reload:
             # Load checkpoint, so that we can assemble the config
